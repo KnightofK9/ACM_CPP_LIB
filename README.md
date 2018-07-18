@@ -1,4 +1,4 @@
-#Data structure
+#Data structure  
 ##Linear DS:  
 * Vector: STL vector  
 * LinkedList: STL list  
