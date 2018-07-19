@@ -2,30 +2,34 @@
 // Created by admin on 7/18/2018.
 //
 #include <iostream>
+#include <algorithm>
+#include <string>
 
 #ifndef ACM_CPP_LIB_BST_H
 #define ACM_CPP_LIB_BST_H
 
-class Node {
-public:
-    int key;
-    Node *left;
-    Node *right;
-    Node *parent;
-
-    Node(int key, Node* parentNode = nullptr){
-        this->key = key;
-        this->left = this->right = nullptr;
-        this->parent = parentNode;
-    }
-};
-
 class BinarySearchTree {
+
+
+    class Node {
+    public:
+        int key;
+        Node *left;
+        Node *right;
+        int height;
+
+        Node(int key) {
+            this->key = key;
+            this->left = this->right = nullptr;
+            this->height = 1;
+        }
+
+    };
+
 public:
     Node *root;
 
     virtual ~BinarySearchTree() {
-        travelRemove(this->root);
     }
 
     BinarySearchTree() {
@@ -33,65 +37,30 @@ public:
     }
 
     void insertKey(int key) {
-        this->root = insertToNode(this->root, key);
+        this->root = insert(this->root, key);
     }
 
-    bool isContainKey(int key){
-        Node* node = searchNode(this->root, key);
-        return node != nullptr;
+    bool isContainKey(int key) {
+        return searchNode(this->root, key) != nullptr;
     }
 
     void deleteKey(int key) {
-        Node* node_to_delete = searchNode(this->root, key);
-        if(node_to_delete == nullptr) return;
-        deleteNode(node_to_delete);
+        deleteNode(this->root, key);
     }
 
     void startTravel() {
-        travel(this->root);
+//        travel(this->root);
+    }
+
+    int getHeight() {
+        return height(this->root);
+    }
+
+    void printTree() {
+        printNode(this->root,0);
     }
 
 private:
-    void deleteNode(Node *node){
-        Node *parent_node = node->parent;
-        Node *left = node->left;
-        Node *right = node->right;
-        Node* replaced_node = nullptr;
-        if(right == nullptr) {
-            replaced_node = left;
-        }
-        else if (left == nullptr) {
-            replaced_node = right;
-        }
-        if(left!=nullptr && right != nullptr)
-        {
-            replaced_node = findInOrderSuccessor(node->right);
-            copyNodeIntoNode(replaced_node, node);
-            deleteNode(replaced_node);
-        }else
-        {
-            if(replaced_node != nullptr) replaced_node->parent = parent_node;
-            if(parent_node->left == node) parent_node->left = replaced_node;
-            else if(parent_node->right == node) parent_node->right = replaced_node;
-            delete node;
-        }
-
-
-    }
-    void copyNodeIntoNode(Node* from_node, Node* to_node){
-        to_node->key = from_node->key;
-        to_node->left = from_node->left;
-        to_node->left->parent = to_node;
-
-        to_node->right = from_node->right;
-        to_node->right->parent = to_node;
-    }
-
-    Node *findInOrderSuccessor(Node *node){
-        if(node == nullptr || node->left == nullptr) return node;
-        return findInOrderSuccessor(node->left);
-    }
-
     Node *searchNode(Node *node, int key) {
         if (node == nullptr) {
             return nullptr;
@@ -105,35 +74,63 @@ private:
             return searchNode(node->left, key);
         }
     }
+    void printNode(Node* node, int tab){
+        if(node == nullptr) return;
+        printNode(node->right, tab + 1);
+        std::cout<<getTabS(tab) << node->key<<std::endl;
+        printNode(node->left, tab + 1);
 
-    void customFunction(int key) {
-        std::cout << key << std::endl;
     }
-
-    void travel(Node *node) {
-        if (node != nullptr) {
-            travel(node->left);
-            customFunction(node->key);
-            travel(node->right);
+    std::string getTabS(int tab){
+        std::string tab_s;
+        for(int i = 0; i < tab; i++){
+            tab_s += "\t";
         }
+        return tab_s;
     }
-
-    void travelRemove(Node *node) {
-        if (node != nullptr) {
-            travelRemove(node->left);
-            travelRemove(node->right);
-            delete node;
-        }
+    int height(Node* node){
+        if(node == nullptr) return 0;
+        return node->height;
     }
-
-    Node *insertToNode(Node *node, int key, Node* parentNode = nullptr) {
-        if (node == nullptr) return new Node(key,parentNode);
-        if (key < node->key) {
-            node->left = insertToNode(node->left, key, node);
-        } else if (key > node->key) {
-            node->right = insertToNode(node->right, key, node);
-        }
+    Node* insert(Node* node, int key){
+        if(node == nullptr) return new Node(key);
+        if(key < node->key) node->left = insert(node->left, key);
+        else if(key > node->key) node->right = insert(node->right, key);
+        else return node;
+        node->height = 1 + std::max(height(node->left), height(node->right));
         return node;
+    }
+    Node* deleteNode(Node* node, int key){
+        if(node == nullptr) return nullptr;
+        if(key < node->key) node->left = deleteNode(node->left, key);
+        else if(key > node->key) node->right = deleteNode(node->right, key);
+        else {
+            if(node->left == nullptr || node->right==nullptr){
+                Node* temp = node->left != nullptr ? node->left : node->right;
+                if(temp == nullptr){
+                    temp = node;
+                    node = nullptr;
+                }else
+                    *node = *temp;
+                delete temp;
+            }else{
+                Node* t = findInOrderSuccessor(node->right);
+                node->key = t->key;
+                node->right = deleteNode(node->right, node->key);
+            }
+        }
+        if(node == nullptr) return node;
+        node->height = 1 + std::max(height(node->left), height(node->right));
+        return node;
+
+    }
+    int getBalance(Node* node){
+        return height(node->left) - height(node->right);
+    }
+
+    Node *findInOrderSuccessor(Node *node){
+        if(node == nullptr || node->left == nullptr) return node;
+        return findInOrderSuccessor(node->left);
     }
 };
 

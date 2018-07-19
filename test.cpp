@@ -3,25 +3,55 @@
 
 #include <bits/stdc++.h>
 #include "data_structure/BinarySearchTree.h"
+#include "data_structure/AVLTree.h"
 
 int main() {
-    BinarySearchTree tree;
-    tree.insertKey(50);
-    tree.insertKey(30);
+//    BinarySearchTree tree;
+    AVLTree tree;
+    tree.insertKey(10);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
     tree.insertKey(20);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
+    tree.insertKey(30);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
     tree.insertKey(40);
-    tree.insertKey(70);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
+    tree.insertKey(50);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
     tree.insertKey(60);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
+    tree.insertKey(70);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
     tree.insertKey(80);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
+    tree.insertKey(90);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
+    tree.insertKey(100);
+    std::cout<<"----"<<std::endl;
+    tree.printTree();
 
-    tree.startTravel();
-    bool is_contain = tree.isContainKey(40);
-    std::cout<<is_contain<<std::endl;
+    std::cout<<"Height: "<<tree.getHeight()<<std::endl;
 
-    tree.deleteKey(40);
-    is_contain = tree.isContainKey(40);
-    std::cout<<is_contain<<std::endl;
+    int keyToRemove = 40;
 
-    tree.startTravel();
+    bool is_contain = tree.isContainKey(keyToRemove);
+    std::cout<<"Is contain key "<<keyToRemove<<":"<<is_contain<<std::endl;
+
+    tree.deleteKey(keyToRemove);
+    is_contain = tree.isContainKey(keyToRemove);
+    std::cout<<"Is contain key "<<keyToRemove<<":"<<is_contain<<std::endl;
+
+    tree.printTree();
+
+    std::cout<<"Height: "<<tree.getHeight()<<std::endl;
     return 0;
 }
