@@ -1,11 +1,32 @@
 // C++ program to demonstrate 
 // accessing of data members 
-
+#include <vector>
 #include <bits/stdc++.h>
 #include "data_structure/BinarySearchTree.h"
+#include "data_structure/SegmentTree.h"
 
-int main() {
-//    BinarySearchTree tree;
+typedef std::vector<int> vi;
+
+
+
+int testSegmentRMQ() {
+    int arr[] = { 18, 17, 13, 19, 15, 11, 20 };
+    vi A(arr, arr + 7);
+    SegmentTreeRMQ st(A);
+    std::cout<<"RMQ(1, 3) = "<< st.rmq(1, 3)<<std::endl;
+    std::cout<<"RMQ(4, 6) = "<< st.rmq(4, 6)<<std::endl;
+}
+int testSegmentRSQ() {
+    int arr[] = { 18, 17, 13, 19, 15, 11, 20 };
+    vi A(arr, arr + 7);
+    SegmentTreeRSQ st(A);
+    std::cout<<"RMQ(1, 3) = "<< st.rsq(1, 3)<<std::endl;
+    std::cout<<"RMQ(4, 6) = "<< st.rsq(4, 6)<<std::endl;
+}
+
+
+int testBST(){
+    //    BinarySearchTree tree;
     AVLTree tree;
     tree.insertKey(10);
     std::cout<<"----"<<std::endl;
@@ -53,4 +74,8 @@ int main() {
 
     std::cout<<"Height: "<<tree.getHeight()<<std::endl;
     return 0;
+}
+
+int main() {
+    testSegmentRSQ();
 }

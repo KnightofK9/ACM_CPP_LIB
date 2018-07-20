@@ -10,26 +10,19 @@ typedef std::vector<ii> vii;
 
 class AdjacencyMatrixGraph {
 public:
-    int** matrix;
+    std::vector<std::vector<int>> matrix;
     int n;
 
     AdjacencyMatrixGraph(int n) {
-        this->matrix = new int*[n];
-        for(int i = 0; i < n; i++){
-            this->matrix[i] = new int[n];
-        }
         this->n = n;
+
+        std::vector<int> row;
+        row.assign(n,0);
+        matrix.assign(static_cast<unsigned int>(n), row);
     }
 
     virtual ~AdjacencyMatrixGraph() {
-        for(int y  = 0; y<n;y++){
-            for(int x = 0; x<n; x++){
-                delete matrix[y][x];
-            }
-            delete[] matrix[y];
-        }
-        delete[] matrix;
-        matrix = nullptr;
+
     }
 };
 class AdjacencyListGraph{
